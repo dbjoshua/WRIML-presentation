@@ -1,0 +1,62 @@
+^document
+  ^title Introduction to WRIML _title
+  ^author Akpoué Kouamé Josué _author
+  ^date 2024-06-01 _date
+  
+  ^section
+    ^heading What is WRIML? _heading
+    ^paragraph
+      WRIML (WRIting Markup Language) is a markup language designed (by Akpoué Kouamé Josué) to simplify the writing of textual documents by providing a clear and flexible syntax.
+    _paragraph
+  _section
+  
+  ^section
+    ^heading Principles of Operation _heading
+    ^paragraph
+      WRIML is based on several fundamental principles for structuring documents:
+    _paragraph
+    ^list
+      ^item Use of Tags: Opening and closing tags enclose the content of the document, allowing different elements to be delimited.
+        ^paragraph
+          Example: ^paragraph This is a paragraph _paragraph
+      ^item Simplicity of Syntax: The syntax of WRIML is simple and intuitive, with tags represented by specific characters.
+        ^paragraph
+          Example: ^heading Section Title _heading
+      ^item Flexibility: Users can define their own tags and elements according to their specific needs, providing great adaptability.
+        ^paragraph
+          Example: ^note This is a note _note
+      ^item Default Paragraph: Any text not enclosed by a tag is considered a default paragraph, simplifying the writing process.
+        ^paragraph
+          Example: This is a paragraph without a tag.
+    _list
+  _section
+  
+  ^section
+    ^heading WRIML Syntax _heading
+    ^paragraph
+      The syntax of WRIML is simple and intuitive. The main elements to remember are:
+    _paragraph
+    ^list
+      ^item Opening and Closing Tags: Tags are represented by specific characters, such as `^` for opening and `_` for closing.
+        ^paragraph
+          Example: ^tag Content _tag
+      ^item Empty Tags: Empty elements are represented by a combination of opening and closing characters, such as `^_tag`.
+        ^paragraph
+          Example: ^br _
+      ^item Attributes: Attributes are defined using a syntax similar to XML, with the attribute name followed by its value in quotes.
+        ^paragraph
+          Example: ^link_href="https://www.example.com" Link _link
+    _list
+  _section
+
+  ^section
+    ^heading Additional Notes _heading
+    ^paragraph
+      Here are some additional notes on using WRIML:
+    _paragraph
+    ^list
+      ^item Flexible Tag Names: Tag names can contain "-" as word separators (e.g., ^tag-name) or use Camel Case convention (e.g., ^TagName).
+      ^item Default Comment Tag: The default tag for comments is "-", but users can define their own comment tag according to their preferences (e.g., rem, com, note, comment, etc.).
+    _list
+  _section
+_document
