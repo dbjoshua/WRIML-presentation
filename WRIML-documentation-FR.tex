@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{datetime}
+
+\newdate{todaydate}{\the\year}{\the\month}{\the\day}
+
+\newcommand{\wriml}[1]{\textcolor{blue}{\texttt{#1}}}
+
+\title{Documentation de WRIML}
+\author{Akpoué Kouamé Josué}
+\date{\displaydate{todaydate}}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+WRIML (WRIting Markup Language) est un langage de balisage conçu pour simplifier l'écriture de documents textuels en fournissant une syntaxe claire et flexible.
+
+\section{Principes de fonctionnement}
+WRIML repose sur plusieurs principes fondamentaux pour structurer les documents :
+
+\begin{itemize}
+    \item \textbf{Utilisation des balises} : Les balises d'ouverture et de fermeture encadrent le contenu du document, permettant de délimiter différents éléments.
+    \item \textbf{Simplicité de la syntaxe} : La syntaxe de WRIML est simple et intuitive, avec des balises représentées par des caractères spécifiques.
+    \item \textbf{Flexibilité} : Les utilisateurs peuvent définir leurs propres balises et éléments selon leurs besoins spécifiques, offrant une grande adaptabilité.
+    \item \textbf{Paragraphe par défaut} : Tout texte non encadré par une balise est considéré comme un paragraphe par défaut, simplifiant le processus d'écriture.
+\end{itemize}
+
+\section{Syntaxe de WRIML}
+La syntaxe de WRIML est simple et intuitive. Les principaux éléments à retenir sont :
+
+\begin{itemize}
+    \item \textbf{Balises d'ouverture et de fermeture} : Les balises sont représentées par des caractères spécifiques, tels que \wriml{\textasciicircum} pour l'ouverture et \wriml{\_} pour la fermeture.
+    \item \textbf{Balises vides} : Les éléments vides sont représentés par une combinaison de caractères d'ouverture et de fermeture, tels que \wriml{\textasciicircum\_tag}.
+    \item \textbf{Attributs} : Les attributs sont définis à l'aide d'une syntaxe similaire à XML, avec le nom de l'attribut suivi de sa valeur entre guillemets.
+    \item \textbf{Exemple avec un lien} : \wriml{\textasciicircum lien\_href="https://www.example.com" Texte du lien \_lien}
+\end{itemize}
+
+\section{Notes supplémentaires}
+Voici quelques notes supplémentaires sur l'utilisation de WRIML :
+
+\begin{itemize}
+    \item \textbf{Noms de balises flexibles} : Les noms de balises peuvent contenir des tirets comme séparateurs de mots (par exemple, \wriml{\textasciicircum tag-name}) ou utiliser la convention Camel Case (par exemple, \wriml{\textasciicircum NomDeBalise}).
+    \item \textbf{Balise de commentaire par défaut} : La balise par défaut pour les commentaires est "-", mais les utilisateurs peuvent définir leur propre balise de commentaire selon leurs préférences (par exemple, rem, com, note, comment, etc.).
+\end{itemize}
+
+\end{document}
