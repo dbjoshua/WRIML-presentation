@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{datetime}
+
+\newdate{todaydate}{\the\year}{\the\month}{\the\day}
+
+\newcommand{\wriml}[1]{\textcolor{blue}{\texttt{#1}}}
+
+\title{WRIML Documentation}
+\author{Akpoué Kouamé Josué}
+\date{\displaydate{todaydate}}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+WRIML (WRIting Markup Language) is a markup language designed to simplify the writing of textual documents by providing a clear and flexible syntax.
+
+\section{Principles of Operation}
+WRIML is based on several fundamental principles for structuring documents:
+
+\begin{itemize}
+    \item \textbf{Use of Tags}: Opening and closing tags enclose the content of the document, allowing different elements to be delimited.
+    \item \textbf{Simplicity of Syntax}: The syntax of WRIML is simple and intuitive, with tags represented by specific characters.
+    \item \textbf{Flexibility}: Users can define their own tags and elements according to their specific needs, providing great adaptability.
+    \item \textbf{Default Paragraph}: Any text not enclosed by a tag is considered a default paragraph, simplifying the writing process.
+\end{itemize}
+
+\section{WRIML Syntax}
+The syntax of WRIML is simple and intuitive. The main elements to remember are:
+
+\begin{itemize}
+    \item \textbf{Opening and Closing Tags}: Tags are represented by specific characters, such as \textcolor{blue}{\texttt{\textasciicircum}} for opening and \textcolor{blue}{\texttt{\_}} for closing.
+    \item \textbf{Empty Tags}: Empty elements are represented by a combination of opening and closing characters, such as \textcolor{blue}{\texttt{\textasciicircum\_tag}}.
+    \item \textbf{Attributes}: Attributes are defined using a syntax similar to XML, with the attribute name followed by its value in quotes.
+    \item \textbf{Example with Link}: \textcolor{blue}{\texttt{\textasciicircum link\_href="https://www.example.com" Link Text \_link}}
+\end{itemize}
+
+\section{Additional Notes}
+Here are some additional notes on using WRIML:
+
+\begin{itemize}
+    \item \textbf{Flexible Tag Names}: Tag names can contain "-" as word separators (e.g., \textcolor{blue}{\texttt{\textasciicircum tag-name}}) or use Camel Case convention (e.g., \textcolor{blue}{\texttt{\textasciicircum TagName}}).
+    \item \textbf{Default Comment Tag}: The default tag for comments is "-", but users can define their own comment tag according to their preferences (e.g., rem, com, note, comment, etc.).
+\end{itemize}
+
+\end{document}
