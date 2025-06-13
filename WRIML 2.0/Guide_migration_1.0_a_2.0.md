@@ -35,7 +35,7 @@ Les espaces étaient obligatoires avant/après les balises.
 ### WRIML 2.0
 
 ```wriml
-^titreCeci est un titre_titre
+^titre Ceci est un titre_titre
 ```
 
 Les espaces ne sont plus obligatoires. Toutefois, ils peuvent être conservés sans effet secondaire.
@@ -124,7 +124,7 @@ Les documents WRIML 1.0 sont **non valides** en 2.0 sans ajustement, mais la tra
 
 ### Outils de migration
 
-Un script Python peut être écrit pour automatiser la majorité de ces transformations.
+Un script Python peut être écrit pour automatiser la majorité de ces transformations, suivant l'intérêt pour ce système.
 
 ---
 
