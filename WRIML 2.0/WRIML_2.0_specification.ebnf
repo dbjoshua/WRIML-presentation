@@ -1,0 +1,35 @@
+document      = element+ ;
+
+element       = open_tag content? close_tag ;
+
+content       = (element | text)+ ;
+
+text          = text_char+ ;
+
+text_char     = ? tout caractère sauf les caractères réservés (^, _, :) sauf s'ils sont échappés avec ^_^, ^__, ^_: ? ;
+
+open_tag      = "^" tag_name attributes? ;
+
+close_tag     = "_" tag_name ;
+
+attributes    = (":" space? attribute)* ;
+
+attribute     = attr_name "=" quoted_value ;
+
+quoted_value  = '"' (char - '"')* '"' ;
+
+tag_name      = builtin_tag | custom_tag ;
+
+builtin_tag   = "doc" | "rem" | "com" | "-" | "code" | "verb" ;
+
+custom_tag    = name ;
+
+attr_name     = name ;
+
+name          = letter (letter | digit | "-" | "_")* ;
+
+letter        = "a" … "z" | "A" … "Z" ;
+
+digit         = "0" … "9" ;
+
+space         = " " ;
