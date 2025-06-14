@@ -26,7 +26,7 @@ custom_tag    = name ;
 
 attr_name     = name ;
 
-name          = letter (letter | digit | "-" | "_")* ;
+name          = letter (letter | digit | "-")* ;
 
 letter        = "a" … "z" | "A" … "Z" ;
 
