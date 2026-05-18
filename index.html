@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WRIML — As fast as Markdown, as rigorous as XML</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #faf8f3;
+    --accent: #c8410a;
+    --accent2: #2d6a4f;
+    --muted: #6b6b7b;
+    --code-bg: #1a1a2e;
+    --code-text: #e8e0d0;
+    --tag: #f4a261;
+    --attr: #90be6d;
+    --val: #a8dadc;
+    --border: #e2ddd5;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 3rem;
+    background: rgba(250,248,243,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: -0.03em;
+  }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+    padding: 8rem 5rem 5rem;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(135deg, #f0ebe0 0%, #e8e0d0 100%);
+    z-index: 0;
+    clip-path: polygon(8% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+
+  .hero-text { position: relative; z-index: 1; }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 2rem; height: 2px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .tagline {
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 0.4rem;
+    line-height: 1.5;
+  }
+
+  .tagline strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .tagline-fr {
+    font-size: 0.92rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.6rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: all 0.2s;
+    cursor: pointer; border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { background: #a8360a; transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--ink); transform: translateY(-1px); }
+
+  /* ── HERO CODE ── */
+  .hero-code { position: relative; z-index: 1; }
+
+  .code-window {
+    background: var(--code-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(26,26,46,0.25);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+
+  .code-titlebar {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1rem;
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .code-filename {
+    margin-left: auto;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+  }
+
+  .code-body { padding: 1.4rem 1.6rem; }
+  .code-body .t { color: var(--tag); }
+  .code-body .a { color: var(--attr); }
+  .code-body .v { color: var(--val); }
+  .code-body .c { color: rgba(255,255,255,0.3); font-style: italic; }
+  .code-body .txt { color: var(--code-text); }
+
+  /* ── SECTIONS COMMUNES ── */
+  section { padding: 6rem 5rem; }
+  section:nth-child(even) { background: white; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  h2 .fr {
+    display: block;
+    font-size: 0.6em;
+    font-style: italic;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 0.2rem;
+  }
+
+  .lead {
+    font-size: 1.1rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 52ch;
+    margin-bottom: 3rem;
+    line-height: 1.65;
+  }
+
+  /* ── COMPARE ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .compare-card {
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .compare-card.wriml {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+
+  .compare-header {
+    padding: 0.6rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    background: var(--border);
+    color: var(--muted);
+  }
+
+  .compare-card.wriml .compare-header {
+    background: var(--accent);
+    color: white;
+  }
+
+  .compare-body {
+    padding: 1rem;
+    background: var(--code-bg);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.75;
+    color: var(--code-text);
+    min-height: 180px;
+  }
+
+  .compare-body .t { color: var(--tag); }
+  .compare-body .a { color: var(--attr); }
+  .compare-body .v { color: var(--val); }
+  .compare-body .md-h { color: #c678dd; }
+  .compare-body .md-b { color: #e5c07b; }
+  .compare-body .md-i { color: #98c379; }
+
+  /* ── HUMAN CENTERED ── */
+  .pillars {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+    margin-top: 2rem;
+  }
+
+  .pillar-icon {
+    width: 3rem; height: 3rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.2rem;
+  }
+
+  .pillar-icon.human { background: #fff3e8; }
+  .pillar-icon.machine { background: #e8f5e9; }
+
+  .pillar h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+
+  .pillar h3 .fr {
+    display: block;
+    font-size: 0.7em;
+    font-style: italic;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .pillar p {
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 1.2rem;
+    line-height: 1.7;
+  }
+
+  .pillar-points { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .pillar-points li {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    font-size: 0.95rem; color: var(--ink);
+  }
+
+  .pillar-points li::before {
+    content: '→';
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .pillar-points.machine li::before { color: var(--accent2); }
+
+  /* ── PRINCIPLES ── */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .principle {
+    padding: 2rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .principle:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(26,26,46,0.1);
+  }
+
+  .principle-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 4rem;
+    color: var(--border);
+    position: absolute;
+    top: -0.5rem; right: 1rem;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .principle h4 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .principle p {
+    font-size: 0.93rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ── SYNTAX ── */
+  .syntax-rows { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+
+  .syntax-row {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 2rem;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: white;
+  }
+
+  .syntax-label { font-size: 0.93rem; color: var(--ink); }
+  .syntax-label strong { display: block; margin-bottom: 0.2rem; font-weight: 600; }
+  .syntax-label span { color: var(--muted); font-size: 0.85rem; font-weight: 300; }
+
+  .syntax-code {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.83rem;
+    background: var(--code-bg);
+    padding: 0.7rem 1rem;
+    border-radius: 4px;
+    color: var(--code-text);
+    line-height: 1.8;
+  }
+
+  .syntax-code .t { color: var(--tag); }
+  .syntax-code .a { color: var(--attr); }
+  .syntax-code .v { color: var(--val); }
+
+  /* ── GET STARTED ── */
+  .get-started {
+    text-align: center;
+    background: var(--ink) !important;
+    color: white;
+  }
+
+  .get-started .section-label { color: var(--tag); }
+  .get-started h2 { color: white; }
+  .get-started .lead { color: rgba(255,255,255,0.6); margin: 0 auto 3rem; }
+
+  .gs-links {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+  }
+
+  .gs-links .btn-primary {
+    background: var(--accent);
+  }
+
+  .gs-links .btn-outline {
+    color: white;
+    border-color: rgba(255,255,255,0.3);
+  }
+  .gs-links .btn-outline:hover { border-color: white; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem 5rem;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.82rem; color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-text > * {
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+  }
+  .hero-text > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero-text > *:nth-child(2) { animation-delay: 0.2s; }
+  .hero-text > *:nth-child(3) { animation-delay: 0.3s; }
+  .hero-text > *:nth-child(4) { animation-delay: 0.35s; }
+  .hero-text > *:nth-child(5) { animation-delay: 0.4s; }
+
+  .hero-code {
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; gap: 2rem; }
+    .hero::before { display: none; }
+    section { padding: 4rem 2rem; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .pillars { grid-template-columns: 1fr; gap: 3rem; }
+    .principles-grid { grid-template-columns: 1fr 1fr; }
+    .syntax-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+
+  @media (max-width: 600px) {
+    .principles-grid { grid-template-columns: 1fr; }
+    .gs-links { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">^WRIML*</a>
+  <ul class="nav-links">
+    <li><a href="#why">Why / Pourquoi</a></li>
+    <li><a href="#syntax">Syntax</a></li>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="https://github.com/dbjoshua/WRIML-presentation" target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">WRiting Markup Language · v3.0</div>
+    <h1>Markup for<br><em>humans</em>,<br>built for machines.</h1>
+    <p class="tagline">
+      <strong>As fast as Markdown, as rigorous as XML.</strong>
+    </p>
+    <p class="tagline-fr">Aussi rapide que Markdown, aussi rigoureux que XML.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://github.com/dbjoshua/WRIML-presentation" target="_blank">Get Started →</a>
+      <a class="btn btn-outline" href="#why">Learn more</a>
+    </div>
+  </div>
+
+  <div class="hero-code">
+    <div class="code-window">
+      <div class="code-titlebar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="code-filename">corpus.wriml</span>
+      </div>
+      <div class="code-body">
+        <div><span class="t">^doc</span> <span class="a">markup</span>=<span class="v">''3.0''</span> <span class="a">date</span>=<span class="v">''2026-05-02''</span><span class="t">:</span></div>
+        <div>&nbsp;&nbsp;<span class="t">^titre:</span><span class="txt">Analyse morphologique</span><span class="t">_titre:</span></div>
+        <div>&nbsp;</div>
+        <div>&nbsp;&nbsp;<span class="t">^data:</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t">^mb:</span><span class="txt">tralE jE O fa-li O</span><span class="t">_mb:</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t">^gl:</span><span class="txt">habit </span><span class="t">^gr</span><span class="v">''foc''</span> <span class="t">^gr</span><span class="v">''3''</span><span class="t">^gr</span><span class="v">''sg''</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="txt">prendre-</span><span class="t">^gr</span><span class="v">''pas''</span><span class="t">.</span><span class="t">^gr</span><span class="v">''perf''</span><span class="t">_gl:</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t">^ft:</span><span class="txt">C'est un habit qu'il a pris</span><span class="t">_ft:</span></div>
+        <div>&nbsp;&nbsp;<span class="t">_data:</span></div>
+        <div><span class="t">_doc:</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY / COMPARE -->
+<section id="why">
+  <div class="section-label">Why WRIML · Pourquoi WRIML</div>
+  <h2>The right tool was missing.
+    <span class="fr">Il manquait le bon outil.</span>
+  </h2>
+  <p class="lead">
+    Markdown is fast but loose. XML is rigorous but verbose. WRIML was designed to occupy the space between — structured enough for machines, readable enough for humans.
+    <br><br>
+    <em>Markdown est rapide mais imprécis. XML est rigoureux mais verbeux. WRIML occupe l'espace entre les deux.</em>
+  </p>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <div class="compare-header">XML</div>
+      <div class="compare-body">
+        <div>&lt;<span class="t">gl</span>&gt;</div>
+        <div>&nbsp;&nbsp;<span class="txt">habit </span></div>
+        <div>&nbsp;&nbsp;&lt;<span class="t">gr</span>&gt;<span class="txt">foc</span>&lt;/<span class="t">gr</span>&gt;</div>
+        <div>&nbsp;&nbsp;&lt;<span class="t">gr</span>&gt;<span class="txt">3</span>&lt;/<span class="t">gr</span>&gt;</div>
+        <div>&nbsp;&nbsp;&lt;<span class="t">gr</span>&gt;<span class="txt">sg</span>&lt;/<span class="t">gr</span>&gt;</div>
+        <div>&nbsp;&nbsp;<span class="txt">prendre-</span></div>
+        <div>&nbsp;&nbsp;&lt;<span class="t">gr</span>&gt;<span class="txt">pas</span>&lt;/<span class="t">gr</span>&gt;</div>
+        <div>&nbsp;&nbsp;<span class="txt">.</span>&lt;<span class="t">gr</span>&gt;<span class="txt">perf</span>&lt;/<span class="t">gr</span>&gt;</div>
+        <div>&lt;/<span class="t">gl</span>&gt;</div>
+      </div>
+    </div>
+
+    <div class="compare-card wriml">
+      <div class="compare-header">WRIML ✦</div>
+      <div class="compare-body">
+        <div><span class="t">^gl:</span><span class="txt">habit </span><span class="t">^gr</span><span class="v">''foc''</span></div>
+        <div><span class="t">^gr</span><span class="v">''3''</span><span class="t">^gr</span><span class="v">''sg''</span></div>
+        <div><span class="txt">prendre-</span><span class="t">^gr</span><span class="v">''pas''</span></div>
+        <div><span class="t">.</span><span class="t">^gr</span><span class="v">''perf''</span><span class="t">_gl:</span></div>
+      </div>
+    </div>
+
+    <div class="compare-card">
+      <div class="compare-header">Markdown</div>
+      <div class="compare-body">
+        <div><span class="c"># No semantic tagging</span></div>
+        <div><span class="c"># No structured glosses</span></div>
+        <div><span class="c"># No validation</span></div>
+        <div>&nbsp;</div>
+        <div><span class="txt">habit </span><span class="md-b">**foc**</span> <span class="md-b">**3**</span><span class="md-b">**sg**</span></div>
+        <div><span class="txt">prendre-</span><span class="md-b">**pas**</span></div>
+        <div><span class="txt">.</span><span class="md-b">**perf**</span></div>
+        <div>&nbsp;</div>
+        <div><span class="c"># Structure lost.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HUMAN CENTERED + MACHINE READABLE -->
+<section id="why">
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon human">✍️</div>
+      <h3>Human Centered
+        <span class="fr">Centré sur l'humain</span>
+      </h3>
+      <p>WRIML was built for people who write — linguists, researchers, authors, developers. The syntax is designed to stay out of your way.</p>
+      <p><em>WRIML a été conçu pour ceux qui écrivent — linguistes, chercheurs, auteurs, développeurs.</em></p>
+      <ul class="pillar-points">
+        <li>3 active characters: <code>^</code> <code>:</code> <code>_</code> — nothing more</li>
+        <li>Named closing tags — you always know what you're closing</li>
+        <li>Any tag name you choose — no imposed vocabulary</li>
+        <li>Inline shorthand <code>^tag''content''</code> for fast annotation</li>
+        <li>Embedded tag declarations for self-documenting files</li>
+      </ul>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-icon machine">⚙️</div>
+      <h3>Machine Readable
+        <span class="fr">Lisible par les machines</span>
+      </h3>
+      <p>WRIML's simplicity is intentional — every rule is unambiguous, every construct is parseable without guesswork.</p>
+      <p><em>La simplicité de WRIML est intentionnelle — chaque règle est non-ambiguë, chaque construction est parseable.</em></p>
+      <ul class="pillar-points machine">
+        <li><code>^</code> is always active — no silent failures</li>
+        <li><code>''</code> is an atomic digraph — never ambiguous</li>
+        <li>Strict nesting — no crossing tags</li>
+        <li>Formal EBNF grammar available</li>
+        <li>Multi-root documents natively supported</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PRINCIPLES -->
+<section id="principles">
+  <div class="section-label">Design Principles · Principes de conception</div>
+  <h2>Four commitments.
+    <span class="fr">Quatre engagements.</span>
+  </h2>
+  <div class="principles-grid">
+    <div class="principle">
+      <div class="principle-num">1</div>
+      <h4>Rigorous · Rigoureux</h4>
+      <p>Strict nesting, zero ambiguity, machine-validatable. Every WRIML file can be parsed deterministically.<br><em>Imbrication stricte, zéro ambiguïté.</em></p>
+    </div>
+    <div class="principle">
+      <div class="principle-num">2</div>
+      <h4>Ergonomic · Ergonomique</h4>
+      <p>Three key characters, minimal Shift key, ~40% fewer keystrokes than XML. Fast to type, fast to read.<br><em>Trois caractères clés, moins de frappes.</em></p>
+    </div>
+    <div class="principle">
+      <div class="principle-num">3</div>
+      <h4>Learnable · Apprenable</h4>
+      <p>One main rule, zero exceptions in everyday use. A novice can read WRIML in minutes.<br><em>Une règle principale, zéro exception courante.</em></p>
+    </div>
+    <div class="principle">
+      <div class="principle-num">4</div>
+      <h4>Extensible · Extensible</h4>
+      <p>Two-layer architecture: simple surface for daily use, advanced system layer for developers building sub-languages.<br><em>Deux couches : simple en surface, puissant en profondeur.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- SYNTAX -->
+<section id="syntax">
+  <div class="section-label">Syntax at a Glance · Syntaxe en un coup d'œil</div>
+  <h2>Five forms. That's it.
+    <span class="fr">Cinq formes. C'est tout.</span>
+  </h2>
+  <div class="syntax-rows">
+    <div class="syntax-row">
+      <div class="syntax-label">
+        <strong>Element with content</strong>
+        <span>Élément avec contenu</span>
+      </div>
+      <div class="syntax-code"><span class="t">^titre:</span>My document title<span class="t">_titre:</span></div>
+    </div>
+    <div class="syntax-row">
+      <div class="syntax-label">
+        <strong>Element with attributes</strong>
+        <span>Élément avec attributs</span>
+      </div>
+      <div class="syntax-code"><span class="t">^doc</span> <span class="a">markup</span>=<span class="v">''3.0''</span> <span class="a">date</span>=<span class="v">''2026-05-02''</span><span class="t">:</span>…<span class="t">_doc:</span></div>
+    </div>
+    <div class="syntax-row">
+      <div class="syntax-label">
+        <strong>Self-closing element</strong>
+        <span>Élément auto-fermant</span>
+      </div>
+      <div class="syntax-code"><span class="t">^br*</span> &nbsp;&nbsp;&nbsp; <span class="t">^img</span> <span class="a">src</span>=<span class="v">''logo.png''</span><span class="t">*</span></div>
+    </div>
+    <div class="syntax-row">
+      <div class="syntax-label">
+        <strong>Quoted inline form</strong>
+        <span>Forme quotée inline</span>
+      </div>
+      <div class="syntax-code"><span class="t">^em</span><span class="v">''italics''</span> &nbsp; <span class="t">^gr</span><span class="v">''foc''</span><span class="t">^gr</span><span class="v">''3''</span><span class="t">^gr</span><span class="v">''sg''</span></div>
+    </div>
+    <div class="syntax-row">
+      <div class="syntax-label">
+        <strong>Namespace prefix</strong>
+        <span>Préfixe namespace</span>
+      </div>
+      <div class="syntax-code"><span class="t">^ling.titre:</span>Morphological analysis<span class="t">_ling.titre:</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- GET STARTED -->
+<section class="get-started">
+  <div class="section-label">Get Started · Commencer</div>
+  <h2>Ready to write?
+    <span class="fr">Prêt à écrire ?</span>
+  </h2>
+  <p class="lead">
+    Read the specification, explore the EBNF grammar, and start annotating your documents in WRIML 3.0.<br>
+    <em>Lisez la spécification, explorez la grammaire EBNF, et commencez à annoter vos documents.</em>
+  </p>
+  <div class="gs-links">
+    <a class="btn btn-primary" href="https://github.com/dbjoshua/WRIML-presentation" target="_blank">GitHub Repository ↗</a>
+    <a class="btn btn-outline" href="#">Read the Spec</a>
+    <a class="btn btn-outline" href="#">EBNF Grammar</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>WRIML 3.0 · MIT License · <a href="https://github.com/dbjoshua" target="_blank">@dbjoshua</a></span>
+  <span><a href="https://sites.google.com/view/josueakpoue" target="_blank">josueakpoue ↗</a></span>
+</footer>
+
+</body>
+</html>
