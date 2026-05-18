@@ -1,4 +1,4 @@
-# WRIML 3.0 — Grammaire EBNF (fusionnée & corrigée)
+# WRIML 3.0 — Grammaire EBNF
 **WRiting Markup Language — Version 3.0**
 Statut : Draft · Licence : MIT © https://github.com/dbjoshua
 
@@ -226,7 +226,7 @@ element-name
 reserved-name
   = "_" | "-" | "#"
   | "doc" | "document"
-  | "import"                    (* permet d'emporter des ressources externes *)
+  | "import"                    (* permet d'importer des ressources externes *)
   | "tag-decl"
   | "com" | "cmt" | "rem" | "comment"
   | "cfx" | "us" | "underscore" | "dash"
