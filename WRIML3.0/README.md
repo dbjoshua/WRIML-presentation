@@ -1,6 +1,6 @@
 
 # WRIML 3.0
-## WRiting Markup Language
+## WRIting Markup Language
 
 > Markup for humans. As rigorous as XML, as fast as Markdown.
 
@@ -8,7 +8,7 @@ WRIML est un langage de balisage pensé pour l’écriture. Il vise un équilibr
 
 *Repo officiel : https://github.com/dbjoshua/WRIML-presentation*
 
-<a href="https://github.com/dbjoshua/WRIML-presentation">
+<a href="https://github.com/dbjoshua/WRIML">
   <img alt="WRIML 3.0" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAxMjAgMjgiPjxzdHlsZT4udGV4dHtmb250OmJvbGQgMTNweCAtYXBwbGUtc3lzdGVtLEJsaW5rTWFjU3lzdGVtRm9udCxTZWdvZSBVSSxIZWx2ZXRpY2EsQXJpYWwsU2Fucy1zZXJpZjtmaWxsOiNmZmY7fTwvc3R5bGU+PHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIyOCIgcng9IjQiIGZpbGw9IiMxRjI5MzciLz48cGF0aCBkPSJNMTIgNkw2IDEybDYgNiA2LTYtNi02eiIgZmlsbD0iIzI1NjNFQiIvPjx0ZXh0IHg9IjI4IiB5PSIxOSIgY2xhc3M9InRleHQiPldSSU1MIDMuMDwvdGV4dD48L3N2Zz4=" />
 </a>
 
